@@ -43,8 +43,11 @@ jobs:
         id: tags
         run: |
           GO_TAG=go${{ matrix.go_version }}
+          PLATFORM_TAG="${GO_TAG}-${{ matrix.platforms }}"
+          # 替换平台中的 `/` 为 `_`
+          PLATFORM_TAG=$(echo "$PLATFORM_TAG" | tr '/' '_')
           echo "tags=$GO_TAG" >> $GITHUB_OUTPUT
-          echo "platform_tag=${GO_TAG}-${{ replace(matrix.platforms, '/', '_') }}" >> $GITHUB_OUTPUT
+          echo "platform_tag=$PLATFORM_TAG" >> $GITHUB_OUTPUT
 
       # group: login and push to GHCR
       - name: Log in to GHCR
