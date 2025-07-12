@@ -40,7 +40,6 @@ jobs:
           context: .
           file: ./dockerfiles/Dockerfile
           push: true
-          tags: user/app:latest
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
