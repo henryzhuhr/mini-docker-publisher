@@ -44,7 +44,7 @@ jobs:
         run: |
           GO_TAG=go${{ matrix.go_version }}
           echo "tags=$GO_TAG" >> $GITHUB_OUTPUT
-          echo "platform_tag=${GO_TAG}-${{ matrix.platforms }}" >> $GITHUB_OUTPUT
+          echo "platform_tag=${GO_TAG}-${{ replace(matrix.platforms, '/', '_') }}" >> $GITHUB_OUTPUT
 
       # group: login and push to GHCR
       - name: Log in to GHCR
