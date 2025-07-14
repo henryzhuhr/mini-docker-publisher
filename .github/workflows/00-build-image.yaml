@@ -4,8 +4,11 @@ on:
   release:
     types: [published]
   push:
-    # branches:
-    #   - main
+    tags:
+      - 'v*' # 匹配所有以 v 开头的 tag，例如 v1.0.0
+    branches:
+      - main
+      - dev
 
 jobs:
   build-multi-go-multi-arch:
@@ -48,6 +51,12 @@ jobs:
           PLATFORM_TAG=$(echo "$PLATFORM_TAG" | tr '/' '_')
           echo "tags=$GO_TAG" >> $GITHUB_OUTPUT
           echo "platform_tag=$PLATFORM_TAG" >> $GITHUB_OUTPUT
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+          else
+            echo "tag=" >> $GITHUB_OUTPUT
+          fi
 
       # group: login and push to GHCR
       - name: Log in to GHCR
@@ -64,8 +73,10 @@ jobs:
           file: ./dockerfiles/Dockerfile
           push: true
           tags: |
+            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.platform_tag }}
             ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.tags }}
+            ${{ steps.tags.outputs.tag != '' && format('ghcr.io/{0}:{1}', github.repository, steps.tags.outputs.tag) }}
           build-args: |
             GO_VERSION=${{ matrix.go_version }}
           platforms: |
