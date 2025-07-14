@@ -70,7 +70,8 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.platform_tag }}
             ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.tags }}
-            # ${{ steps.tags.outputs.tag != '' && format('ghcr.io/{0}:{1}', github.repository, steps.tags.outputs.tag) }}
+            
+          # ${{ steps.tags.outputs.tag != '' && format('ghcr.io/{0}:{1}', github.repository, steps.tags.outputs.tag) }}
           build-args: |
             GO_VERSION=${{ matrix.go_version }}
           platforms: |
